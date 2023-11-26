@@ -1,4 +1,4 @@
-import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
 const breedSelect = document.getElementById('breedSelect');
 const loader = document.querySelector('.loader');
@@ -7,8 +7,19 @@ const catInfo = document.querySelector('.cat-info');
 const catImage = document.getElementById('catImage');
 const catDetails = document.getElementById('catDetails');
 
+function showLoader() {
+  loader.style.display = 'block';
+  breedSelect.style.display = 'none';
+}
+
+function hideLoader() {
+  loader.style.display = 'none';
+  breedSelect.style.display = 'block';
+}
+
 async function populateBreeds() {
   try {
+    showLoader();
     const breeds = await fetchBreeds();
     breeds.forEach(breed => {
       const option = document.createElement('option');
@@ -19,7 +30,7 @@ async function populateBreeds() {
   } catch (err) {
     error.style.display = 'block';
   } finally {
-    loader.style.display = 'none';
+    hideLoader();
   }
 }
 
@@ -39,13 +50,13 @@ async function showCatInfo(breedId) {
   } catch (err) {
     error.style.display = 'block';
   } finally {
-    loader.style.display = 'none';
+    hideLoader();
   }
 }
 
 breedSelect.addEventListener('change', async (event) => {
   const selectedBreedId = event.target.value;
-  loader.style.display = 'block';
+  showLoader();
   error.style.display = 'none';
   catInfo.style.display = 'none';
   await showCatInfo(selectedBreedId);
